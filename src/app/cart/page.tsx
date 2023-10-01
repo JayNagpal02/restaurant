@@ -1,68 +1,51 @@
+"use client";
+
+import { useCartStore } from "@/utils/store";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect } from "react";
 
 const CartPage = () => {
+    const { products, totalItems, totalPrice, removeFromCart } = useCartStore();
+
     return (
         <div className="h-[calc(100vh-6rem)] md:h-[calc(100vh-9rem)] flex flex-col text-red-500 lg:flex-row">
             {/* PRODUCT CONTAINER  */}
             <div className="h-1/2 p-4 flex flex-col justify-center overflow-scrol lg:h-full lg:w-2/3 2xl:w-1/2 lg:px-20 xl:px-40">
                 {/* SINGLE ITEM */}
-                <div className="flex items-center justify-between mb-4">
-                    <Image
-                        src="/temporary/p1.png"
-                        alt=""
-                        width={90}
-                        height={90}
-                    />
-                    <div className="">
-                        <h1 className="uppercase text-xl font-bold">
-                            sicilian
-                        </h1>
-                        <span>Large</span>
+                {products.map((item) => (
+                    <div
+                        className="flex items-center justify-between mb-4"
+                        key={item.id}
+                    >
+                        {item.img && (
+                            <Image
+                                src="/temporary/p1.png"
+                                alt=""
+                                width={90}
+                                height={90}
+                            />
+                        )}
+                        <div className="">
+                            <h1 className="uppercase text-xl font-bold">
+                                {item.title} X{item.quantity}
+                            </h1>
+                            <span>{item.optionTitle}</span>
+                        </div>
+                        <h2 className="font-bold">₹{item.price}</h2>
+                        <span
+                            className="cursor-pointer"
+                            onClick={() => removeFromCart(item)}
+                        >
+                            X
+                        </span>
                     </div>
-                    <h2 className="font-bold">₹799</h2>
-                    <span className="cursor-pointer">X</span>
-                </div>
-                {/* SINGLE ITEM */}
-                <div className="flex items-center justify-between mb-4">
-                    <Image
-                        src="/temporary/p1.png"
-                        alt=""
-                        width={90}
-                        height={90}
-                    />
-                    <div className="">
-                        <h1 className="uppercase text-xl font-bold">
-                            sicilian
-                        </h1>
-                        <span>Large</span>
-                    </div>
-                    <h2 className="font-bold">₹799</h2>
-                    <span className="cursor-pointer">X</span>
-                </div>
-                {/* SINGLE ITEM */}
-                <div className="flex items-center justify-between mb-4">
-                    <Image
-                        src="/temporary/p1.png"
-                        alt=""
-                        width={90}
-                        height={90}
-                    />
-                    <div className="">
-                        <h1 className="uppercase text-xl font-bold">
-                            sicilian
-                        </h1>
-                        <span>Large</span>
-                    </div>
-                    <h2 className="font-bold">₹799</h2>
-                    <span className="cursor-pointer">X</span>
-                </div>
+                ))}
             </div>
             {/* PAYMENT CONTAINER  */}
             <div className="h-1/2 p-4 bg-fuchsia-50 flex flex-col gap-4 justify-center lg:h-full lg:w-1/3 2xl:w-1/2 lg:px-20 xl:px-40 2xl:text-xl 2xl:gap-6">
                 <div className="flex justify-between">
-                    <span className="">Subtotal (3 items)</span>
-                    <span className="">₹747</span>
+                    <span className="">Subtotal ({totalItems} items)</span>
+                    <span className="">₹{totalPrice}</span>
                 </div>
                 <div className="flex justify-between">
                     <span className="">Service Cost</span>
@@ -75,7 +58,7 @@ const CartPage = () => {
                 <hr className="my-2" />
                 <div className="flex justify-between">
                     <span className="uppercase">Total(INCL. GST)</span>
-                    <span className="font-bold">₹747</span>
+                    <span className="font-bold">₹{totalPrice}</span>
                 </div>
                 <button className="uppercase bg-red-500 text-white p-3 rounded-md w-1/2 self-end">
                     checkout
